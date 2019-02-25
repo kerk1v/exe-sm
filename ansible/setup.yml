@@ -16,3 +16,40 @@
 
     - name: restart nginx
       service: name=nginx state=restarted  
+
+- hosts: backend
+  tasks: 
+    - name: install dummy nginx for testing
+      apt: name=nginx state=latest
+
+- hosts: backend1
+  tasks: 
+    - name: install dummy nginx for testing
+      apt: name=nginx state=latest
+    - name: Add nginx static file
+      template: src=nginx/back1.html dest=/var/www/html/index.html
+      notify:
+        - restart nginx
+
+  handlers:
+    - name: restart php5-fpm
+      service: name=php5-fpm state=restarted
+
+    - name: restart nginx
+      service: name=nginx state=restarted  
+
+- hosts: backend2
+  tasks: 
+    - name: install dummy nginx for testing
+      apt: name=nginx state=latest
+    - name: Add nginx static file
+      template: src=nginx/back2.html dest=/var/www/html/index.html
+      notify:
+        - restart nginx
+
+  handlers:
+  - name: restart php5-fpm
+    service: name=php5-fpm state=restarted
+
+  - name: restart nginx
+    service: name=nginx state=restarted  
